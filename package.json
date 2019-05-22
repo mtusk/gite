@@ -1,0 +1,69 @@
+{
+  "name": "gite",
+  "description": "A Node CLI with some helpful commands related to git.",
+  "version": "0.0.0",
+  "author": "mtusk",
+  "bin": {
+    "gite": "./bin/run"
+  },
+  "bugs": "https://github.com/mtusk/gite/issues",
+  "dependencies": {
+    "@oclif/command": "^1.5.13",
+    "@oclif/config": "^1.12.12",
+    "@oclif/plugin-help": "^2.1.6",
+    "open": "^6.2.0",
+    "parse-git-config": "^3.0.0",
+    "sinon-chai": "^3.3.0",
+    "tslib": "^1.9.3"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1.22.0",
+    "@oclif/test": "^1.2.4",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^10.12.0",
+    "@types/parse-git-config": "^3.0.0",
+    "@types/sinon-chai": "^3.2.2",
+    "chai": "^4.2.0",
+    "globby": "^8.0.2",
+    "mocha": "^5.2.0",
+    "nyc": "^13.3.0",
+    "sinon": "^7.3.2",
+    "ts-node": "^8.1.0",
+    "tslint": "^5.16.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.4.5"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/mtusk/gite",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "gite",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "repository": "mtusk/gite",
+  "scripts": {
+    "postpack": "rm -f oclif.manifest.json",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
+    "lint": "tslint -p test -t stylish",
+    "coverage": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "types": "lib/index.d.ts"
+}
