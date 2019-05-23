@@ -4,7 +4,10 @@ A Node CLI with some helpful commands related to git.
 
 Built using [oclif](https://oclif.io/).
 
-## Usage
+## Getting Started
+```bash
+npm install @mtusk/gite --global
+```
 
 ```bash
 $ gite
@@ -22,7 +25,7 @@ $ open [PATH]
 ```
 Opens the Opens GitHub for the repository associated to a directory in the default web browser.
 
-## Running locally
+## Debugging
 ```bash
 $ ./bin/run
 $ ./bin/run open
