@@ -6,7 +6,7 @@ Built using [oclif](https://oclif.io/).
 
 ## Getting Started
 ```bash
-npm install @mtusk/gite --global
+$ npm install @mtusk/gite --global
 ```
 
 ```bash
