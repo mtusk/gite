@@ -1,7 +1,7 @@
 {
   "name": "@mtusk/gite",
   "description": "A Node CLI with some helpful commands related to git.",
-  "version": "1.0.2-1",
+  "version": "1.0.2",
   "author": "mtusk",
   "bin": {
     "gite": "./bin/run"
