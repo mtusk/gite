@@ -1,7 +1,7 @@
 import { Command, flags } from '@oclif/command';
 import { Input } from '@oclif/parser/lib/flags';
 import { IArg } from '@oclif/parser/lib/args';
-import * as path from 'path';
+import { resolve, join } from 'path';
 import * as fs from 'fs';
 import * as parse from 'parse-git-config';
 import { open } from '../wrappers/open';
@@ -29,14 +29,19 @@ export default class Open extends Command {
   async run() {
     const { args, flags } = this.parse(Open);
     const cwd = process.cwd();
-    const gitConfigPath = path.resolve(cwd, args.path, '.git', 'config');
+    const results = this.climb(resolve(cwd, args.path));
 
-    const gitConfigExists = fs.existsSync(gitConfigPath);
-    if (!gitConfigExists) {
-      this.error(`Path not found: ${gitConfigPath}`);
+    if (results.gitConfigPath === null) {
+      this.error('Could not find git config. Looked in the following locations:');
+
+      results.attempts.forEach((attempt) => {
+        this.log(`  ${attempt}`);
+      });
+
+      return;
     }
 
-    const gitConfig = parse.sync({ path: gitConfigPath });
+    const gitConfig = parse.sync({ path: results.gitConfigPath });
     const origin = gitConfig['remote "origin"'];
 
     if (!origin) { this.error('No "origin" remote found in git config'); }
@@ -48,5 +53,38 @@ export default class Open extends Command {
     this.log(`Opening '${repositoryUrl}' in your default browser...`);
 
     open(repositoryUrl);
+  }
+
+  climb: (path: string) => ({ gitConfigPath: string | null, attempts: string[] }) = (path: string) => {
+    const attempt = resolve(path, '.git', 'config');
+    const gitConfigExists = fs.existsSync(attempt);
+
+    if (gitConfigExists) {
+      return {
+        gitConfigPath: attempt,
+        attempts: [],
+      };
+    }
+
+    const parentDirectory = join(path, '..');
+    const alreadyAtTheTop = parentDirectory === path;
+    const canClimb = !alreadyAtTheTop && fs.existsSync(parentDirectory);
+
+    if (canClimb) {
+      const results = this.climb(parentDirectory);
+
+      return {
+        gitConfigPath: results.gitConfigPath,
+        attempts: [
+          attempt,
+          ...results.attempts,
+        ],
+      };
+    }
+
+    return {
+      gitConfigPath: null,
+      attempts: [attempt],
+    };
   }
 }
